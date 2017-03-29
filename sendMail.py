@@ -15,6 +15,7 @@ sender = 'presouce@163.com'
 smtpserver = 'smtp.163.com'
 
 def sendMail(sub, context):
+    receiver = 'presouce@163.com'
     msg = MIMEText(context, _subtype='plain',_charset='gb2312')  # 中文需参数‘utf-8’，单字节字符不需要
     msg['Subject'] = Header(sub, 'utf-8')
 
@@ -26,7 +27,7 @@ def sendMail(sub, context):
 
 def sendToKindle(sub_folder, file_name):
     file_name = file_name + '.txt'
-    receiver = 'yamieborn_1@kindle.cn'
+    kindleAddr = 'yamieborn_1@kindle.cn'
     '''
     msg = MIMEMultipart('alternative')
     msg['Subject'] = "convert" + str(datetime.datetime.now())
@@ -42,7 +43,7 @@ def sendToKindle(sub_folder, file_name):
     msg = MIMEText(open(os.path.join(sub_folder, file_name), 'r').read(),'base64', _charset='utf-8')
     msg['Subject'] = "convert" + str(datetime.datetime.now())
     msg['From'] = sender
-    msg['To'] = "Your Kindle" + "<" + receiver + ">"
+    msg['To'] = "Your Kindle" + "<" + kindleAddr + ">"
     '''
 
     msg = open(os.path.join(sub_folder, file_name), 'r', encoding='utf-8').read()
@@ -55,15 +56,15 @@ def sendToKindle(sub_folder, file_name):
     print("start login")
     server.login(emailAccount.username, emailAccount.password)
     print("start sending email")
-    server.sendmail(sender, receiver, msg.as_string())
+    server.sendmail(sender, kindleAddr, msg.as_string())
     server.quit()
 
 def send_attachment_kd(sub_folder, file_name):
-    receiver = 'yamieborn_1@kindle.cn'
+    kindleAddr = 'yamieborn_1@kindle.cn'
     msg = MIMEMultipart()
     msg['Subject'] = 'convert: 小说 ' + file_name
     msg['From'] = sender
-    msg['To'] = "Your Kindle" + "<" + receiver + ">"
+    msg['To'] = "Your Kindle" + "<" + kindleAddr + ">"
     part = email.mime.base.MIMEBase('application', "octet-stream")
     #fpath=os.path.join(KINDLE_DIR,filename)
     filename_txt = sub_folder + file_name + ".txt"
@@ -78,7 +79,7 @@ def send_attachment_kd(sub_folder, file_name):
     server=smtplib.SMTP()
     server.connect('smtp.163.com')
     server.login(emailAccount.username, emailAccount.password)
-    server.sendmail(sender,receiver,msg.as_string())
+    server.sendmail(sender, kindleAddr, msg.as_string())
     server.quit()
     print("Send successfully")
 
