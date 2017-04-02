@@ -16,7 +16,7 @@ smtpserver = 'smtp.163.com'
 
 def sendMail(sub, context):
     receiver = 'presouce@163.com'
-    msg = MIMEText(context, _subtype='plain',_charset='gb2312')  # 中文需参数‘utf-8’，单字节字符不需要
+    msg = MIMEText(context, _subtype='plain',_charset='utf-8')  # 中文需参数‘utf-8’，单字节字符不需要
     msg['Subject'] = Header(sub, 'utf-8')
 
     smtp = smtplib.SMTP()
