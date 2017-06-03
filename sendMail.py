@@ -53,9 +53,9 @@ def sendToKindle(sub_folder, file_name):
 
     server = smtplib.SMTP()
     server.connect('smtp.163.com')
-    print("start login")
+    #print("start login")
     server.login(emailAccount.username, emailAccount.password)
-    print("start sending email")
+    #print("start sending email")
     server.sendmail(sender, kindleAddr, msg.as_string())
     server.quit()
 
@@ -81,7 +81,7 @@ def send_attachment_kd(sub_folder, file_name):
     server.login(emailAccount.username, emailAccount.password)
     server.sendmail(sender, kindleAddr, msg.as_string())
     server.quit()
-    print("Send successfully")
+    print("Send %s successfully" % file_name)
 
 '''
 sub_folder = os.path.join(os.getcwd(), "/xs/")
