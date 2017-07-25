@@ -61,16 +61,15 @@ def print_info(msg, indent=0):
 
 email = 'presouce@163.com'
 password = emailAccount.password
-
 pop3_server = 'pop.163.com'
-# 连接到POP3服务器:
-server = poplib.POP3(pop3_server)
-# 可以打开或关闭调试信息:
-# server.set_debuglevel(1)
-# 可选:打印POP3服务器的欢迎文字:
-print(server.getwelcome().decode('utf-8'))
 
 def checkMail(sub, days):
+    # 连接到POP3服务器:
+    server = poplib.POP3(pop3_server)
+    # 可以打开或关闭调试信息:
+    # server.set_debuglevel(1)
+    # 可选:打印POP3服务器的欢迎文字:
+    # print(server.getwelcome().decode('utf-8'))
     # 身份认证:
     tryFlag = True
     while(tryFlag):
