@@ -70,34 +70,46 @@ server = poplib.POP3(pop3_server)
 # 可选:打印POP3服务器的欢迎文字:
 print(server.getwelcome().decode('utf-8'))
 
-# 身份认证:
-server.user(email)
-server.pass_(password)
+def checkMail(sub, days):
+    # 身份认证:
+    server.user(email)
+    server.pass_(password)
 
-# stat()返回邮件数量和占用空间:
-print('Messages: %s. Size: %s' % server.stat())
-# list()返回所有邮件的编号:
-resp, mails, octets = server.list()
-# 可以查看返回的列表类似[b'1 82923', b'2 2184', ...]
-print(mails)
+    # stat()返回邮件数量和占用空间:
+    #print('Messages: %s. Size: %s' % server.stat())
+    # list()返回所有邮件的编号:
+    resp, mails, octets = server.list()
+    # 可以查看返回的列表类似[b'1 82923', b'2 2184', ...]
+    #print(mails)
 
-# 获取最新一封邮件, 注意索引号从1开始:
-index = len(mails)
-resp, lines, octets = server.retr(index)
+    # 获取最新一封邮件, 注意索引号从1开始:
+    index = len(mails)
+    flag = False
+    for ith in range(index,0, -1):
+        resp, lines, octets = server.retr(ith)
 
-# lines存储了邮件的原始文本的每一行,
-# 可以获得整个邮件的原始文本:
-msg_content = b'\r\n'.join(lines).decode('utf-8')
-# 稍后解析出邮件:
-msg = Parser().parsestr(msg_content)
-print_info(msg, 0)
-email_date = get_date(msg)
-print((email_date))
-print(time.localtime())
-print(time.mktime(time.localtime()) - time.mktime(email_date))
+        # lines存储了邮件的原始文本的每一行,
+        # 可以获得整个邮件的原始文本:
+        msg_content = b'\r\n'.join(lines).decode('utf-8')
+        # 稍后解析出邮件:
+        msg = Parser().parsestr(msg_content)
+        subject = decode_str(msg.get('Subject', ''))
+        if subject == sub:
+            flag =True
+            break
+        #print(subject)
+        #print_info(msg, 0)
+        email_date = get_date(msg)
+        #print((email_date))
+        #print(time.localtime())
+        #print(time.mktime(time.localtime()) - time.mktime(email_date)/60/60)    #hr
+        if (time.mktime(time.localtime()) - time.mktime(email_date))/60/60/24 > days:
+            break
 
-# 可以根据邮件索引号直接从服务器删除邮件:
-# server.dele(index)
-# 关闭连接:
-server.quit()
+    # 可以根据邮件索引号直接从服务器删除邮件:
+    # server.dele(index)
+    # 关闭连接:
+    server.quit()
+    return flag
 
+#print(checkMail('刀镇星河 第三七八章 无相神斩', 30))
