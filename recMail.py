@@ -72,8 +72,15 @@ print(server.getwelcome().decode('utf-8'))
 
 def checkMail(sub, days):
     # 身份认证:
-    server.user(email)
-    server.pass_(password)
+    tryFlag = True
+    while(tryFlag):
+        try:
+            server.user(email)
+            server.pass_(password)
+            tryFlag =False
+        except:
+            tryFlag = True
+
 
     # stat()返回邮件数量和占用空间:
     #print('Messages: %s. Size: %s' % server.stat())
