@@ -1,18 +1,18 @@
-from imbox import Imbox
+#-*- encoding: utf-8 -*-
+#-*- encoding: gbk -*-
+
 import emailAccount
+from imbox import Imbox
 
-# SSL Context docs https://docs.python.org/2/library/ssl.html#ssl.create_default_context
+eBox = Imbox('imap-mail.outlook.com',
+        username=emailAccount.hotname,
+        password=emailAccount.hotpass,
+        ssl=True,
+        ssl_context=None)
 
-imbox = Imbox('imap.163.com',
-		username= emailAccount.username,
-		password= emailAccount.password,
-		ssl=True,
-		ssl_context=None)
+messages_folder = eBox.messages(folder='others')
 
-boxlist = (imbox.folders())[1]
-print(boxlist[6])
-
-messages_folder = imbox.messages(folder=boxlist[6])
 
 for uid, message in messages_folder:
-    print(message.keys())
+# Every message is an object with the following keys
+    print(message.subject)
