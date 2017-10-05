@@ -14,15 +14,22 @@ from email import encoders
 sender = 'presouce@163.com'
 smtpserver = 'smtp.163.com'
 
-def sendMail(sub, context):
-    receiver = 'presouce@163.com'
+def sendMail(sub, context, receiver='presouce@163.com', sendFrom='hotmail'):
+    
     msg = MIMEText(context, _subtype='plain',_charset='utf-8')  # 中文需参数‘utf-8’，单字节字符不需要
     msg['Subject'] = Header(sub, 'utf-8')
 
     smtp = smtplib.SMTP()
-    smtp.connect('smtp.163.com')
-    smtp.login(emailAccount.username, emailAccount.password)
-    smtp.sendmail(sender, receiver, msg.as_string())
+    if sendFrom == 'hotmail':
+        smtp.connect('smtp-mail.outlook.com')
+        smtp.ehlo()
+        smtp.starttls() 
+        smtp.login(emailAccount.hotname, emailAccount.hotpass)
+        smtp.sendmail(emailAccount.hotname, receiver, msg.as_string())
+    else:
+        smtp.connect('smtp.163.com')
+        smtp.login(emailAccount.username, emailAccount.password)
+        smtp.sendmail(sender, receiver, msg.as_string())
     smtp.quit()
 
 def sendToKindle(sub_folder, file_name):
