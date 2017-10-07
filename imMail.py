@@ -22,6 +22,20 @@ for uid, message in messages_folder:
     eBox.move(uid, 'others')
 '''
 
+def moveMail(subject, fromFolder, toFolder):
+    eBox = Imbox('imap-mail.outlook.com',
+        username=emailAccount.hotname,
+        password=emailAccount.hotpass,
+        ssl=True,
+        ssl_context=None)
+    messages_folder = eBox.messages(folder=fromFolder, subject=subject)
+    
+    for uid, message in messages_folder:
+    # Every message is an object with the following keys
+        logging.debug(message.subject)
+        eBox.move(uid, toFolder)
+    eBox.logout()
+
 def checkMailList(folder):
 	eBox = Imbox('imap-mail.outlook.com',
         username=emailAccount.hotname,
