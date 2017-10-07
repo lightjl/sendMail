@@ -2,3 +2,6 @@ account.py
 emailAccount.py
 __pycache__/
 .idea/
+/.project
+/tags
+/.pydevproject

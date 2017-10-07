@@ -38,3 +38,21 @@ def checkMailList(folder):
 	eBox.logout()
 	return list_mail
 
+
+
+def checkMailFolderList(folderlist):
+    eBox = Imbox('imap-mail.outlook.com',
+        username=emailAccount.hotname,
+        password=emailAccount.hotpass,
+        ssl=True,
+        ssl_context=None)
+    list_mail = []
+    for folder in folderlist:
+        messages_folder = eBox.messages(folder=folder)
+        for uid, message in messages_folder:
+        # Every message is an object with the following keys
+            logging.debug(message.subject)
+            list_mail.append(message.subject)
+            # print((message.body)['plain'])
+    eBox.logout()
+    return list_mail
