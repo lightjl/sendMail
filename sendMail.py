@@ -10,27 +10,55 @@ import os
 import datetime
 import email
 from email import encoders
+import time
 
 sender = 'presouce@163.com'
 smtpserver = 'smtp.163.com'
 
-def sendMail(sub, context, receiver='ming188199@hotmail.com', sendFrom='hotmail'):
+def sendMail(sub, context, receiver='ming188199@hotmail.com', sendFrom='hotmail', changeReceiver=False):
     
     msg = MIMEText(context, _subtype='plain',_charset='utf-8')  # 中文需参数‘utf-8’，单字节字符不需要
     msg['Subject'] = Header(sub, 'utf-8')
+    
+    tosendFlag = True
 
-    smtp = smtplib.SMTP()
-    if sendFrom == 'hotmail':
-        smtp.connect('smtp-mail.outlook.com')
-        smtp.ehlo()
-        smtp.starttls() 
-        smtp.login(emailAccount.hotname, emailAccount.hotpass)
-        smtp.sendmail(emailAccount.hotname, receiver, msg.as_string())
-    else:
-        smtp.connect('smtp.163.com')
-        smtp.login(emailAccount.username, emailAccount.password)
-        smtp.sendmail(sender, receiver, msg.as_string())
-    smtp.quit()
+    tryNum = 0
+    while tosendFlag:
+        try:
+            tosendFlag = False
+            if sendFrom == 'hotmail':
+                smtp = smtplib.SMTP()
+                smtp.connect('smtp-mail.outlook.com')
+                smtp.ehlo()
+                smtp.starttls() 
+                smtp.login(emailAccount.hotname, emailAccount.hotpass)
+                smtp.sendmail(emailAccount.hotname, receiver, msg.as_string())
+                smtp.quit()
+            elif sendFrom == 'sj':
+                smtpap = smtplib.SMTP()
+                smtpap.connect('smtp.mail.me.com')
+                smtpap.login(emailAccount.sjname, emailAccount.sjpass)
+                smtpap.sendmail(emailAccount.sjname, receiver, msg.as_string())
+                smtpap.quit()
+            else:
+                smtp163 = smtplib.SMTP()
+                smtp163.connect('smtp.163.com')
+                smtp163.login(emailAccount.username, emailAccount.password)
+                smtp163.sendmail(emailAccount.username, receiver, msg.as_string())
+                smtp163.quit()
+        except Exception as e:
+            print(e)
+            tosendFlag = True
+            if sendFrom == 'hotmail':
+                sendFrom = 'sj'
+            elif sendFrom == 'sj':
+                sendFrom = '163'
+            else:
+                sendFrom = 'hotmail'
+                tryNum += 1
+                if changeReceiver or tryNum > 10:
+                    sendFrom = '163'
+                    receiver = emailAccount.username
 
 def sendToKindle(sub_folder, file_name):
     file_name = file_name + '.txt'
