@@ -23,6 +23,20 @@ for uid, message in messages_folder:
     eBox.move(uid, 'others')
 '''
 
+def delMail(eBox, folder='Sent'):
+    messages_folder = eBox.messages(folder=folder)
+    for uid, message in messages_folder:
+    # Every message is an object with the following keys
+        logging.debug(message.subject)
+        eBox.delete(uid)
+
+def markReaded(emailbox, folder):
+    messagesToRead = emailbox.messages(folder=folder, unread=True)
+    for uid, message in messagesToRead:
+    # Every message is an object with the following keys
+        logging.info(message.subject)
+        emailbox.mark_seen(uid)
+
 def moveMail(subject, fromFolder, toFolder):
     eBox = Imbox('imap-mail.outlook.com',
         username=emailAccount.hotname,
@@ -60,8 +74,6 @@ def checkMailList(folder):
             checkFlag = True
         
     return list_mail
-
-
 
 def checkMailFolderList(folderlist):
     eBox = Imbox('imap-mail.outlook.com',
