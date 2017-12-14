@@ -6,6 +6,7 @@ from imbox import Imbox
 import imaplib
 import logging
 import time
+import datetime
 
 
 # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s -%(message)s')
@@ -31,12 +32,20 @@ def Ebox():
     return eBox
 
 def delMail(eBox, folder='Sent'):
-    messages_folder = eBox.messages(folder=folder)
+    messages_folder = eBox.messages(folder=folder, date__lt=date__lt)
     for uid, message in messages_folder:
     # Every message is an object with the following keys
         logging.debug(message.subject)
         eBox.delete(uid)
 
+def delMailLt(eBox, folder='Sent', days=15):
+    date__lt=datetime.date.today()-datetime.timedelta(days=15)
+    messages_folder = eBox.messages(folder=folder, date__lt=date__lt)
+    for uid, message in messages_folder:
+    # Every message is an object with the following keys
+        logging.debug(message.subject)
+        eBox.delete(uid)
+        
 def markReaded(emailbox, folder):
     messagesToRead = emailbox.messages(folder=folder, unread=True)
     for uid, message in messagesToRead:
