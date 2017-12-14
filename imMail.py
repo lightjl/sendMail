@@ -32,7 +32,7 @@ def Ebox():
     return eBox
 
 def delMail(eBox, folder='Sent'):
-    messages_folder = eBox.messages(folder=folder, date__lt=date__lt)
+    messages_folder = eBox.messages(folder=folder)
     for uid, message in messages_folder:
     # Every message is an object with the following keys
         logging.debug(message.subject)
