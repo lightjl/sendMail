@@ -22,6 +22,13 @@ for uid, message in messages_folder:
     print((message.body)['plain'])
     eBox.move(uid, 'others')
 '''
+def Ebox():
+    eBox = Imbox('imap-mail.outlook.com',
+                    username=emailAccount.hotname,
+                    password=emailAccount.hotpass,
+                    ssl=True,
+                    ssl_context=None)
+    return eBox
 
 def delMail(eBox, folder='Sent'):
     messages_folder = eBox.messages(folder=folder)
@@ -50,8 +57,23 @@ def moveMail(subject, fromFolder, toFolder):
         logging.debug(message.subject)
         eBox.move(uid, toFolder)
     eBox.logout()
-
-def checkMailList(folder):
+    
+def moveMailUid(mailuid, fromFolder, toFolder):
+    eBox = Imbox('imap-mail.outlook.com',
+        username=emailAccount.hotname,
+        password=emailAccount.hotpass,
+        ssl=True,
+        ssl_context=None)
+    messages_folder = eBox.messages(folder=fromFolder)
+    
+    for uid, message in messages_folder:
+    # Every message is an object with the following keys
+        if uid == mailuid:
+            logging.debug(message.subject)
+            eBox.move(uid, toFolder)
+    eBox.logout()
+    
+def checkMailList(folder, unreadFlag=False):
     checkFlag = True
     list_mail = []
     while checkFlag:
@@ -62,7 +84,7 @@ def checkMailList(folder):
                     password=emailAccount.hotpass,
                     ssl=True,
                     ssl_context=None)
-            messages_folder = eBox.messages(folder=folder)
+            messages_folder = eBox.messages(folder=folder, unread=unreadFlag)
             for uid, message in messages_folder:
             # Every message is an object with the following keys
                 logging.debug(message.subject)

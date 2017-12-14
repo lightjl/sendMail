@@ -34,12 +34,6 @@ def sendMail(sub, context, receiver='ming188199@hotmail.com', sendFrom='hotmail'
                 smtp.login(emailAccount.hotname, emailAccount.hotpass)
                 smtp.sendmail(emailAccount.hotname, receiver, msg.as_string())
                 smtp.quit()
-            elif sendFrom == 'sj':
-                smtpap = smtplib.SMTP()
-                smtpap.connect('smtp.mail.me.com')
-                smtpap.login(emailAccount.sjname, emailAccount.sjpass)
-                smtpap.sendmail(emailAccount.sjname, receiver, msg.as_string())
-                smtpap.quit()
             else:
                 smtp163 = smtplib.SMTP()
                 smtp163.connect('smtp.163.com')
@@ -50,13 +44,11 @@ def sendMail(sub, context, receiver='ming188199@hotmail.com', sendFrom='hotmail'
             print(e)
             tosendFlag = True
             if sendFrom == 'hotmail':
-                sendFrom = 'sj'
-            elif sendFrom == 'sj':
                 sendFrom = '163'
             else:
                 sendFrom = 'hotmail'
                 tryNum += 1
-                if changeReceiver or tryNum > 10:
+                if (changeReceiver or (tryNum > 10)):
                     sendFrom = '163'
                     receiver = emailAccount.username
 
