@@ -15,6 +15,45 @@ import time
 sender = 'presouce@163.com'
 smtpserver = 'smtp.163.com'
 
+
+def sendMailPic(sub, context, pic, receiver='ming188199@hotmail.com', sendFrom='hotmail', changeReceiver=False):
+    msg = MIMEMultipart('related')
+    #msg = MIMEText(context, _subtype='plain',_charset='utf-8')  # 中文需参数‘utf-8’，单字节字符不需要
+    msg['Subject'] = Header(sub, 'utf-8')
+    msgText = MIMEText('<b>'+ context +'</b><br><img src="' + pic +'"><br>','html','utf-8')
+    msg.attach(msgText)
+    tosendFlag = True
+
+    tryNum = 0
+    while tosendFlag:
+        try:
+            tosendFlag = False
+            if sendFrom == 'hotmail':
+                smtp = smtplib.SMTP()
+                smtp.connect('smtp-mail.outlook.com')
+                smtp.ehlo()
+                smtp.starttls() 
+                smtp.login(emailAccount.hotname, emailAccount.hotpass)
+                smtp.sendmail(emailAccount.hotname, receiver, msg.as_string())
+                smtp.quit()
+            else:
+                smtp163 = smtplib.SMTP()
+                smtp163.connect('smtp.163.com')
+                smtp163.login(emailAccount.username, emailAccount.password)
+                smtp163.sendmail(emailAccount.username, receiver, msg.as_string())
+                smtp163.quit()
+        except Exception as e:
+            print(e)
+            tosendFlag = True
+            if sendFrom == 'hotmail':
+                sendFrom = '163'
+            else:
+                sendFrom = 'hotmail'
+                tryNum += 1
+                if (changeReceiver or (tryNum > 10)):
+                    sendFrom = '163'
+                    receiver = emailAccount.username
+                    
 def sendMail(sub, context, receiver='ming188199@hotmail.com', sendFrom='hotmail', changeReceiver=False):
     
     msg = MIMEText(context, _subtype='plain',_charset='utf-8')  # 中文需参数‘utf-8’，单字节字符不需要
